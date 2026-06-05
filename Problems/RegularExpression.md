@@ -1,0 +1,154 @@
+From this lesson, we will enter the mysterious world of regular expressions. We can learn it as a foreign language. Learn its grammar, familiar with its vocabulary, practice and practice, Accumulate experience... In the end you will be the master of the regular expression.
+
+First we learn a method of Object RegExp: test(). It is used to test whether a string matches the RegExp Object. It returns a boolean value: true/false. See an example:
+
+console.log( /a/.test("abc") )  //output: true
+console.log( /ab/.test("abc") )  //output: true
+console.log( /ac/.test("abc") )  //output: false
+This is a method we often use, which is usually used to determine whether a character string matches a feature or not.
+
+Now we learn some special wildcard. First one is ".".
+
+In regular expressions, a "." does not match a dot, it matches any character, and one "." euqals to one charecter. Example:
+
+let str="abcdef";
+console.log( str.match(/./g) )   //output: [ 'a', 'b', 'c', 'd', 'e', 'f' ]
+console.log( str.match(/../g) )  //output: [ 'ab', 'cd', 'ef' ]
+console.log( str.match(/.../g) ) //output: [ 'abc', 'def' ]
+This extended training kata will help you understand the usage of ".". But it may be a little bit difficult ;-) Find the murderer
+
+Next we learn wildcard "^" and "$". "^" matches the begining of string. In contrast to it, the "$" matches the end of the string. Example:
+
+let str="abcabc";
+console.log( str.replace(/^a/,"A") )  //output: Abcabc
+console.log( str.replace(/^a/g,"A") )  //output: Abcabc
+console.log( str.replace(/^./,"A") )  //output: Abcabc
+console.log( str.replace(/c$/,"C") )  //output: abcabC
+console.log( str.replace(/c$/g,"C") )  //output: abcabC
+console.log( str.replace(/.$/,"C") )  //output: abcabC
+We can see whether the regular expression is using the "g" option(global match), "^a" always matches the character of the beginning of a string; "c$" always matches the character of the end of the string. Using "^." or ".$"  instead of "^a" or "c$", regular expressions are still working. The following example uses our knowledge of learning to achieve "Capitalize the first letter of the word":
+
+function capIt(str){
+  return str.split(/ /)
+            .map(s=>s.replace(/^./,x=>x.toUpperCase()))
+            .join(" ")
+}
+console.log( capIt("hello world!"))  //output: Hello World!
+console.log( capIt("my name is John."))  //output: My Name Is John.
+In the example above, we first use split() to divide a sentence into words(string array), and then use map() for each word to execute replace(). In the replace () using the regular expression /^./ match the first letter of the word, and then use an arrow function to converted the results of match to uppercase. Finally, use join () to merge the words into sentences.
+
+Of course, if we learn the other regular expression knowledge, there will be a more simple way to achieve. For example:
+
+function capIt(str){
+  return str.replace(/\b./g,x=>x.toUpperCase())
+}
+console.log( capIt("hello world!"))  //output: Hello World!
+console.log( capIt("my name is John."))  //output: My Name Is John.
+What does "\b" mean? We will study in the future.
+
+Comprehensive use of "." "^" and "$" can accurately determine whether a string is in compliance with the specific requirements. See some example:
+
+let reg1=/^...$/     //match any string that length=3
+console.log(reg1.test("abc"))   //output: true
+console.log(reg1.test("efg"))   //output: true
+console.log(reg1.test("ab"))    //output: false
+console.log(reg1.test("abcd"))  //output: false
+
+let reg2=/^a..$/     //match a string that starting with letter "a" and length=3
+console.log(reg2.test("abc"))   //output: true
+console.log(reg2.test("bbc"))   //output: false
+console.log(reg2.test("abcd"))  //output: false
+
+let reg2=/^a.c$/     //match a string that starting with "a" , ending with "c" and length=3
+console.log(reg2.test("abc"))   //output: true
+console.log(reg2.test("abd"))   //output: false
+console.log(reg2.test("abbc"))  //output: false
+The following example demonstrates how to create a regular expression that matches the beginning and end of a word. It may help you to solve the following test.
+
+let word="abcd";
+//method 1:
+//                                     
+let regstr=word[0]                             //first letter
+          +word.slice(1,-1).replace(/./g,".")  //middle letters
+          +word.slice(-1);                     //last letter
+let reg1=new RegExp("^"+regstr+"$");
+console.log(reg1)  //output: /^a..d$/
+
+//method 2:
+let regstr=word.replace(/./g,".")
+               .replace(/^./,word[0])
+               .replace(/.$/,word.slice(-1));
+let reg2=new RegExp("^"+regstr+"$");
+console.log(reg2)  //output: /^a..d$/
+
+//method 3:
+let regstr=word[0]+Array(word.length-1).join(".")+word.slice(-1);  
+//use Array(x).join(".") to generate a repeat text of "."
+let reg3=new RegExp("^"+regstr+"$");
+console.log(reg3)  //output: /^a..d$/
+Ok, lesson is over. let's us do some task.
+
+Task
+
+Coding in function findSimilarity. function accept two parameters: str, a sentence contains some words, separated by spaces; word, a sample word.
+
+Your task is to keep the words that are similar to the sample word, and to remove the other words.
+
+The similarity is defined as: the same length as the sample; the letter at the beginning and the end of word are same as the sample too.
+
+If there are no similar words in the sentence, should return an empty string.
+
+Examples
+
+findSimilarity("bag dog dig dot doog dogs","dog") should return "dog dig"
+findSimilarity("bag dog dig dot doog dogs","dig") should return "dog dig"
+findSimilarity("bag dog dig dot doog dogs","dot") should return "dot"
+findSimilarity("bag dog dig dot doog dogs","god") should return ""
+Hint: Use filter() will make your work easier; If you don't know how to solve the kata, please refer to the examples of lesson.
+
+Series
+
+( ↑↑↑ Click the link above can get my newest kata list, Please add it to your favorites)
+
+#1: create your first JS function helloWorld
+#2: Basic data types--Number
+#3: Basic data types--String
+#4: Basic data types--Array
+#5: Basic data types--Object
+#6: Basic data types--Boolean and conditional statements if..else
+#7: if..else and ternary operator
+#8: Conditional statement--switch
+#9: loop statement --while and do..while
+#10: loop statement --for
+#11: loop statement --break,continue
+#12: loop statement --for..in and for..of
+#13: Number object and its properties
+#14: Methods of Number object--toString() and toLocaleString()
+#15: Methods of Number object--toFixed(), toExponential() and toPrecision()
+#16: Methods of String object--slice(), substring() and substr()
+#17: Methods of String object--indexOf(), lastIndexOf() and search()
+#18: Methods of String object--concat() split() and its good friend join()
+#19: Methods of String object--toUpperCase() toLowerCase() and replace()
+#20: Methods of String object--charAt() charCodeAt() and fromCharCode()
+#21: Methods of String object--trim() and the string template
+#22: Unlock new skills--Arrow function,spread operator and deconstruction
+#23: methods of arrayObject---push(), pop(), shift() and unshift()
+#24: methods of arrayObject---splice() and slice()
+#25: methods of arrayObject---reverse() and sort()
+#26: methods of arrayObject---map()
+#27: methods of arrayObject---filter()
+#28: methods of arrayObject---every() and some()
+#29: methods of arrayObject---concat() and join()
+#30: methods of arrayObject---reduce() and reduceRight()
+#31: methods of arrayObject---isArray() indexOf() and toString()
+#32: methods of Math---round() ceil() and floor()
+#33: methods of Math---max() min() and abs()
+#34: methods of Math---pow() sqrt() and cbrt()
+#35: methods of Math---log() and its family
+#36: methods of Math---kata author's lover:random()
+#37: Unlock new weapon---RegExp Object
+#38: Regular Expression--"^","$", "." and test()
+#39: Regular Expression--"?", "*", "+" and "{}"
+#40: Regular Expression--"|", "[]" and "()"
+#41: Regular Expression--""
+#42: Regular Expression--(?:), (?=) and (?!)
